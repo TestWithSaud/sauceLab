@@ -94,32 +94,3 @@ export const CHECKOUT_INFO = {
         postalCode: '90210'
     }
 } as const;
-
-/**
- * Helper function to get a random valid user (excludes locked_out_user)
- */
-export function getRandomValidUser() {
-    const validUsers = [
-        TEST_USERS.STANDARD,
-        TEST_USERS.PROBLEM,
-        TEST_USERS.PERFORMANCE_GLITCH,
-        TEST_USERS.ERROR,
-        TEST_USERS.VISUAL
-    ];
-    return validUsers[Math.floor(Math.random() * validUsers.length)];
-}
-
-/**
- * Helper function to generate random checkout information
- */
-export function generateRandomCheckoutInfo() {
-    const firstNames = ['John', 'Jane', 'Bob', 'Alice', 'Charlie', 'Diana'];
-    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia'];
-    const postalCodes = ['12345', '90210', '10001', '60601', '94102', '02101'];
-
-    return {
-        firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
-        lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
-        postalCode: postalCodes[Math.floor(Math.random() * postalCodes.length)]
-    };
-}

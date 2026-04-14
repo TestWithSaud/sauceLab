@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
-import { TEST_USERS } from '../test-data/testData';
+import { TEST_USERS, ERROR_MESSAGES } from '../test-data/testData';
 
 /**
  * Test Suite: Login Functionality
@@ -281,6 +281,14 @@ test.describe('Login Page - Negative Scenarios', () => {
      * - Login fails (spaces not trimmed) OR succeeds (spaces trimmed)
      * - Behavior is consistent with application design
      */
+    test('should display error for locked out user', { tag: ['@login', '@regression'] }, async ({ page }) => {
+        await loginPage.login(TEST_USERS.LOCKED_OUT.username, TEST_USERS.LOCKED_OUT.password as string);
+
+        await expect(loginPage.errorMessageContainer).toBeVisible();
+        await expect(loginPage.errorMessageContainer).toContainText(ERROR_MESSAGES.LOCKED_OUT);
+        await expect(page).not.toHaveURL(/inventory\.html/);
+    });
+
     test('should handle whitespace in username', { tag: ['@login', '@regression'] }, async ({ page }) => {
         // Step 1-3: Attempt login with spaces
         await loginPage.login(`${TEST_USERS.STANDARD.username} `, TEST_USERS.STANDARD.password);

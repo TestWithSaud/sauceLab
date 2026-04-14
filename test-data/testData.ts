@@ -2,7 +2,11 @@ export const TEST_USERS = {
     STANDARD: {
         username: process.env.STANDARD_USERNAME,
         password: process.env.STANDARD_PASSWORD,
-    }
+    },
+    LOCKED_OUT: {
+        username: 'locked_out_user',
+        password: process.env.STANDARD_PASSWORD,
+    },
 } as const;
 
 export const CHECKOUT_INFO = {

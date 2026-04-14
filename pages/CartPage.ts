@@ -15,6 +15,7 @@ export class CartPage {
     readonly cartItemQuantities: Locator;
     readonly removeButtons: Locator;
     readonly checkoutButton: Locator;
+    readonly continueShoppingButton: Locator;
 
     /**
      * Constructor to initialize the Cart Page
@@ -30,6 +31,7 @@ export class CartPage {
         this.cartItemQuantities = page.locator('.cart_quantity');
         this.removeButtons = page.getByRole('button', { name: 'Remove' });
         this.checkoutButton = page.getByRole('button', { name: 'Checkout' });
+        this.continueShoppingButton = page.getByRole('button', { name: 'Continue Shopping' });
     }
 
     /**
@@ -71,6 +73,13 @@ export class CartPage {
      */
     async proceedToCheckout(): Promise<void> {
         await this.checkoutButton.click();
+    }
+
+    /**
+     * Click Continue Shopping button to return to inventory
+     */
+    async continueShopping(): Promise<void> {
+        await this.continueShoppingButton.click();
     }
 
 }

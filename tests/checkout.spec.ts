@@ -292,6 +292,48 @@ test.describe('E2E Checkout Flow - 3 Random Items (Using PageManager)', () => {
      * Note: This test uses standard_user authentication.
      * To test with performance_glitch_user, create separate auth state.
      */
+    test('should show error when first name is missing', { tag: ['@checkout', '@regression'] }, async ({ page }) => {
+        await pm.inventoryPage.addProductToCartByIndex(0);
+        await pm.inventoryPage.goToCart();
+        await pm.cartPage.proceedToCheckout();
+        await pm.checkoutStepOnePage.waitForPageLoad();
+
+        await pm.checkoutStepOnePage.fillCheckoutInformation({ firstName: '', lastName: 'Doe', postalCode: '12345' });
+        await pm.checkoutStepOnePage.clickContinue();
+
+        await expect(pm.checkoutStepOnePage.errorMessageContainer).toBeVisible();
+        await expect(pm.checkoutStepOnePage.errorMessageContainer).toContainText('First Name is required');
+        await expect(page).toHaveURL(/checkout-step-one\.html/);
+    });
+
+    test('should show error when last name is missing', { tag: ['@checkout', '@regression'] }, async ({ page }) => {
+        await pm.inventoryPage.addProductToCartByIndex(0);
+        await pm.inventoryPage.goToCart();
+        await pm.cartPage.proceedToCheckout();
+        await pm.checkoutStepOnePage.waitForPageLoad();
+
+        await pm.checkoutStepOnePage.fillCheckoutInformation({ firstName: 'John', lastName: '', postalCode: '12345' });
+        await pm.checkoutStepOnePage.clickContinue();
+
+        await expect(pm.checkoutStepOnePage.errorMessageContainer).toBeVisible();
+        await expect(pm.checkoutStepOnePage.errorMessageContainer).toContainText('Last Name is required');
+        await expect(page).toHaveURL(/checkout-step-one\.html/);
+    });
+
+    test('should show error when postal code is missing', { tag: ['@checkout', '@regression'] }, async ({ page }) => {
+        await pm.inventoryPage.addProductToCartByIndex(0);
+        await pm.inventoryPage.goToCart();
+        await pm.cartPage.proceedToCheckout();
+        await pm.checkoutStepOnePage.waitForPageLoad();
+
+        await pm.checkoutStepOnePage.fillCheckoutInformation({ firstName: 'John', lastName: 'Doe', postalCode: '' });
+        await pm.checkoutStepOnePage.clickContinue();
+
+        await expect(pm.checkoutStepOnePage.errorMessageContainer).toBeVisible();
+        await expect(pm.checkoutStepOnePage.errorMessageContainer).toContainText('Postal Code is required');
+        await expect(page).toHaveURL(/checkout-step-one\.html/);
+    });
+
     test('should complete checkout successfully', { tag: ['@checkout', '@regression'] }, async ({ page }) => {
         // PageManager already initialized in beforeEach
         // Already on inventory page with clean cart

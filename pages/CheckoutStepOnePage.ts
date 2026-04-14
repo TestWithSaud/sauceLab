@@ -13,6 +13,7 @@ export class CheckoutStepOnePage {
     readonly lastNameInput: Locator;
     readonly postalCodeInput: Locator;
     readonly continueButton: Locator;
+    readonly errorMessageContainer: Locator;
 
     /**
      * Constructor to initialize the Checkout Step One Page
@@ -27,6 +28,7 @@ export class CheckoutStepOnePage {
         this.lastNameInput = page.getByPlaceholder('Last Name');
         this.postalCodeInput = page.getByPlaceholder('Zip/Postal Code');
         this.continueButton = page.getByRole('button', { name: 'Continue' });
+        this.errorMessageContainer = page.locator('[data-test="error"]');
     }
 
     /**

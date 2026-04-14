@@ -15,6 +15,7 @@ export class InventoryPage {
     readonly addToCartButtons: Locator;
     readonly shoppingCartBadge: Locator;
     readonly shoppingCartLink: Locator;
+    readonly sortDropdown: Locator;
     /**
      * Constructor to initialize the Inventory Page
      * @param page - Playwright Page object
@@ -30,6 +31,15 @@ export class InventoryPage {
         this.addToCartButtons = page.getByRole('button', { name: 'Add to cart' });
         this.shoppingCartBadge = page.locator('.shopping_cart_badge');
         this.shoppingCartLink = page.locator('.shopping_cart_link');
+        this.sortDropdown = page.locator('[data-test="product-sort-container"]');
+    }
+
+    /**
+     * Select a sort option from the dropdown
+     * @param value - Sort option value: 'az', 'za', 'lohi', 'hilo'
+     */
+    async selectSortOption(value: 'az' | 'za' | 'lohi' | 'hilo'): Promise<void> {
+        await this.sortDropdown.selectOption(value);
     }
 
     /**
@@ -122,12 +132,10 @@ export class InventoryPage {
      * @returns Cart count as number, or 0 if badge not visible
      */
     async getCartCount(): Promise<number> {
-        try {
-            const badgeText = await this.shoppingCartBadge.innerText();
-            return parseInt(badgeText, 10);
-        } catch {
-            return 0; // Badge not visible means cart is empty
-        }
+        const isVisible = await this.shoppingCartBadge.isVisible();
+        if (!isVisible) return 0;
+        const badgeText = await this.shoppingCartBadge.innerText();
+        return parseInt(badgeText, 10);
     }
 
     /**

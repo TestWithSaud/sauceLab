@@ -4,13 +4,13 @@ import { CHECKOUT_INFO } from '../test-data/testData';
 
 test.describe('Visual Regression', () => {
 
-    test('inventory page', async ({ page }) => {
+    test('inventory page', { tag: ['@visual'] }, async ({ page }) => {
         const pm = new PageManager(page);
         await pm.inventoryPage.open();
         await expect(page).toHaveScreenshot('inventory.png', { fullPage: true });
     });
 
-    test('cart page with items', async ({ page }) => {
+    test('cart page with items', { tag: ['@visual'] }, async ({ page }) => {
         const pm = new PageManager(page);
         await pm.inventoryPage.open();
         await pm.inventoryPage.addProductToCartByIndex(0);
@@ -19,7 +19,7 @@ test.describe('Visual Regression', () => {
         await expect(page).toHaveScreenshot('cart.png', { fullPage: true });
     });
 
-    test('checkout step one page', async ({ page }) => {
+    test('checkout step one page', { tag: ['@visual'] }, async ({ page }) => {
         const pm = new PageManager(page);
         await pm.inventoryPage.open();
         await pm.inventoryPage.addProductToCartByIndex(0);
@@ -29,7 +29,7 @@ test.describe('Visual Regression', () => {
         await expect(page).toHaveScreenshot('checkout-step-one.png', { fullPage: true });
     });
 
-    test('checkout step two page', async ({ page }) => {
+    test('checkout step two page', { tag: ['@visual'] }, async ({ page }) => {
         const pm = new PageManager(page);
         await pm.inventoryPage.open();
         await pm.inventoryPage.addProductToCartByIndex(0);
@@ -40,7 +40,7 @@ test.describe('Visual Regression', () => {
         await expect(page).toHaveScreenshot('checkout-step-two.png', { fullPage: true });
     });
 
-    test('checkout complete page', async ({ page }) => {
+    test('checkout complete page', { tag: ['@visual'] }, async ({ page }) => {
         const pm = new PageManager(page);
         await pm.inventoryPage.open();
         await pm.inventoryPage.addProductToCartByIndex(0);

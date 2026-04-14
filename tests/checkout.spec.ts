@@ -76,7 +76,7 @@ test.describe('E2E Checkout Flow - 3 Random Items (Using PageManager)', () => {
      * - Order completion is confirmed with success message
      * - User sees "Thank you for your order!" message
      */
-    test('should successfully complete checkout with 3 random items', async ({ page }) => {
+    test('should successfully complete checkout with 3 random items', { tag: ['@smoke', '@checkout'] }, async ({ page }) => {
         const itemCountToSelect = 3;
         // PageManager already initialized in beforeEach
 
@@ -180,7 +180,7 @@ test.describe('E2E Checkout Flow - 3 Random Items (Using PageManager)', () => {
      * - Same products appear in checkout overview
      * - Product count remains 3 throughout the flow
      */
-    test('should maintain cart items consistency through checkout flow', async ({ page }) => {
+    test('should maintain cart items consistency through checkout flow', { tag: ['@checkout', '@regression'] }, async ({ page }) => {
         // PageManager already initialized in beforeEach
         // Already on inventory page with clean cart
 
@@ -229,7 +229,7 @@ test.describe('E2E Checkout Flow - 3 Random Items (Using PageManager)', () => {
      * - Total equals subtotal plus tax
      * - No negative or zero values (for non-empty cart)
      */
-    test('should calculate prices correctly in checkout overview', async ({ page }) => {
+    test('should calculate prices correctly in checkout overview', { tag: ['@checkout', '@regression'] }, async ({ page }) => {
         // PageManager already initialized in beforeEach
         // Already on inventory page with clean cart
 
@@ -292,7 +292,7 @@ test.describe('E2E Checkout Flow - 3 Random Items (Using PageManager)', () => {
      * Note: This test uses standard_user authentication.
      * To test with performance_glitch_user, create separate auth state.
      */
-    test('should complete checkout successfully', async ({ page }) => {
+    test('should complete checkout successfully', { tag: ['@checkout', '@regression'] }, async ({ page }) => {
         // PageManager already initialized in beforeEach
         // Already on inventory page with clean cart
 

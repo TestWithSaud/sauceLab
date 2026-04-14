@@ -16,7 +16,7 @@ test.describe('Login Page - Positive Scenarios', () => {
         await loginPage.open();
     });
 
-    test('should successfully login with valid standard_user credentials', async ({ page }) => {
+    test('should successfully login with valid standard_user credentials', { tag: ['@smoke', '@login'] }, async ({ page }) => {
         await loginPage.login(TEST_USERS.STANDARD.username, TEST_USERS.STANDARD.password);
         await loginPage.waitForInventoryPage();
         await expect(page).toHaveURL(/inventory.html/);
@@ -44,7 +44,7 @@ test.describe('Login Page - Positive Scenarios', () => {
      * - All login form elements are visible and interactive
      * - Login button is enabled
      */
-    test('should display all login page elements correctly', async () => {
+    test('should display all login page elements correctly', { tag: ['@login', '@regression'] }, async () => {
         // Expected Results: Verify all elements are visible
         await expect(loginPage.usernameInput).toBeVisible();
         await expect(loginPage.passwordInput).toBeVisible();
@@ -71,7 +71,7 @@ test.describe('Login Page - Positive Scenarios', () => {
      * Expected Results:
      * - Page title is "Swag Labs"
      */
-    test('should have correct page title', async () => {
+    test('should have correct page title', { tag: ['@login', '@regression'] }, async () => {
         const title = await loginPage.pageTitle;
         expect(title).toBe('Swag Labs');
     });
@@ -114,7 +114,7 @@ test.describe('Login Page - Negative Scenarios', () => {
      * - Error message contains "Username and password do not match"
      * - User remains on login page
      */
-    test('should display error message with invalid username', async ({ page }) => {
+    test('should display error message with invalid username', { tag: ['@login', '@regression'] }, async ({ page }) => {
         // Step 1-3: Attempt login with invalid username
         await loginPage.login('invalid_user', 'secret_sauce');
 
@@ -150,7 +150,7 @@ test.describe('Login Page - Negative Scenarios', () => {
      * - Error message contains "Username and password do not match"
      * - User remains on login page
      */
-    test('should display error message with invalid password', async ({ page }) => {
+    test('should display error message with invalid password', { tag: ['@login', '@regression'] }, async ({ page }) => {
         // Step 1-3: Attempt login with invalid password
         await loginPage.login('standard_user', 'wrong_password');
 
@@ -181,7 +181,7 @@ test.describe('Login Page - Negative Scenarios', () => {
      * - Error message contains "Username is required"
      * - User remains on login page
      */
-    test('should display error message when username is empty', async ({ page }) => {
+    test('should display error message when username is empty', { tag: ['@login', '@regression'] }, async ({ page }) => {
         // Step 1-3: Attempt login without username
         await loginPage.fillPassword('secret_sauce');
         await loginPage.clickLoginButton();
@@ -213,7 +213,7 @@ test.describe('Login Page - Negative Scenarios', () => {
      * - Error message contains "Password is required"
      * - User remains on login page
      */
-    test('should display error message when password is empty', async ({ page }) => {
+    test('should display error message when password is empty', { tag: ['@login', '@regression'] }, async ({ page }) => {
         // Step 1-3: Attempt login without password
         await loginPage.fillUsername('standard_user');
         await loginPage.clickLoginButton();
@@ -247,7 +247,7 @@ test.describe('Login Page - Negative Scenarios', () => {
      * - Error message is no longer visible
      * - Login form remains functional
      */
-    test('should be able to dismiss error message', async ({ page }) => {
+    test('should be able to dismiss error message', { tag: ['@login', '@regression'] }, async ({ page }) => {
         // Step 1: Trigger error
         await loginPage.login('invalid_user', 'invalid_pass');
 
@@ -281,7 +281,7 @@ test.describe('Login Page - Negative Scenarios', () => {
      * - Login fails (spaces not trimmed) OR succeeds (spaces trimmed)
      * - Behavior is consistent with application design
      */
-    test('should handle whitespace in username', async ({ page }) => {
+    test('should handle whitespace in username', { tag: ['@login', '@regression'] }, async ({ page }) => {
         // Step 1-3: Attempt login with spaces
         await loginPage.login(`${TEST_USERS.STANDARD.username} `, TEST_USERS.STANDARD.password);
 

@@ -23,10 +23,10 @@ export class CheckoutCompletePage {
 
         // Initialize locators
         this.pageTitle = page.locator('.title');
-        this.completeHeader = page.locator('.complete-header');
-        this.completeText = page.locator('.complete-text');
-        this.ponyExpressImage = page.locator('.pony_express');
-        this.backHomeButton = page.locator('[data-test="back-to-products"]');
+        this.completeHeader = page.getByRole('heading', { name: 'Thank you for your order!' });
+        this.completeText = page.getByText('Your order has been dispatched', { exact: false });
+        this.ponyExpressImage = page.getByAltText('Pony Express');
+        this.backHomeButton = page.getByRole('button', { name: 'Back Home' });
     }
 
     /**

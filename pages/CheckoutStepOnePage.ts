@@ -23,10 +23,10 @@ export class CheckoutStepOnePage {
 
         // Initialize locators
         this.pageTitle = page.locator('.title');
-        this.firstNameInput = page.locator('[data-test="firstName"]');
-        this.lastNameInput = page.locator('[data-test="lastName"]');
-        this.postalCodeInput = page.locator('[data-test="postalCode"]');
-        this.continueButton = page.locator('[data-test="continue"]');
+        this.firstNameInput = page.getByPlaceholder('First Name');
+        this.lastNameInput = page.getByPlaceholder('Last Name');
+        this.postalCodeInput = page.getByPlaceholder('Zip/Postal Code');
+        this.continueButton = page.getByRole('button', { name: 'Continue' });
     }
 
     /**

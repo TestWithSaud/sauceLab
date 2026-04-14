@@ -30,9 +30,9 @@ export class CartPage {
         this.cartItemNames = page.locator('.inventory_item_name');
         this.cartItemPrices = page.locator('.inventory_item_price');
         this.cartItemQuantities = page.locator('.cart_quantity');
-        this.removeButtons = page.locator('button[data-test^="remove"]');
-        this.continueShoppingButton = page.locator('[data-test="continue-shopping"]');
-        this.checkoutButton = page.locator('[data-test="checkout"]');
+        this.removeButtons = page.getByRole('button', { name: 'Remove' });
+        this.continueShoppingButton = page.getByRole('button', { name: 'Continue Shopping' });
+        this.checkoutButton = page.getByRole('button', { name: 'Checkout' });
         this.shoppingCartBadge = page.locator('.shopping_cart_badge');
     }
 

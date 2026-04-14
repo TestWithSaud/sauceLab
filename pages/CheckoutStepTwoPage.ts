@@ -39,8 +39,8 @@ export class CheckoutStepTwoPage {
         this.subtotalLabel = page.locator('.summary_subtotal_label');
         this.taxLabel = page.locator('.summary_tax_label');
         this.totalLabel = page.locator('.summary_total_label');
-        this.finishButton = page.locator('[data-test="finish"]');
-        this.cancelButton = page.locator('[data-test="cancel"]');
+        this.finishButton = page.getByRole('button', { name: 'Finish' });
+        this.cancelButton = page.getByRole('button', { name: 'Cancel' });
     }
 
     /**

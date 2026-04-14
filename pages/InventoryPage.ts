@@ -27,7 +27,7 @@ export class InventoryPage {
         this.productCards = page.locator('.inventory_item');
         this.productNames = page.locator('.inventory_item_name');
         this.productPrices = page.locator('.inventory_item_price');
-        this.addToCartButtons = page.locator('button[data-test^="add-to-cart"]');
+        this.addToCartButtons = page.getByRole('button', { name: 'Add to cart' });
         this.shoppingCartBadge = page.locator('.shopping_cart_badge');
         this.shoppingCartLink = page.locator('.shopping_cart_link');
     }

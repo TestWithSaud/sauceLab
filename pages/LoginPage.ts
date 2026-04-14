@@ -19,11 +19,11 @@ export class LoginPage {
     this.page = page;
 
     // Initialize locators using data-test attributes (most stable)
-    this.usernameInput = page.locator('[data-test="username"]');
-    this.passwordInput = page.locator('[data-test="password"]');
-    this.loginButton = page.locator('[data-test="login-button"]');
+    this.usernameInput = page.getByPlaceholder('Username');
+    this.passwordInput = page.getByPlaceholder('Password');
+    this.loginButton = page.getByRole('button', { name: 'Login' });
     this.errorMessageContainer = page.locator('[data-test="error"]');
-    this.logoImage = page.locator('.login_logo');
+    this.logoImage = page.getByText('Swag Labs');
     this.pageTitle = 'Swag Labs';
   }
   async open(): Promise<void> {

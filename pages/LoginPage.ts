@@ -13,6 +13,7 @@ export class LoginPage {
   readonly loginButton: Locator;
   readonly errorMessageContainer: Locator;
   readonly logoImage: Locator;
+  readonly headerTitle: Locator;
   readonly pageTitle: string;
 
   constructor(page: Page) {
@@ -24,6 +25,7 @@ export class LoginPage {
     this.loginButton = page.getByRole('button', { name: 'Login' });
     this.errorMessageContainer = page.locator('[data-test="error"]');
     this.logoImage = page.getByText('Swag Labs');
+    this.headerTitle = page.locator('.title');
     this.pageTitle = 'Swag Labs';
   }
   async open(): Promise<void> {
@@ -67,60 +69,10 @@ export class LoginPage {
   }
 
   /**
-   * Get the current page URL
-   * @returns Current URL string
-   */
-  async getCurrentURL(): Promise<string> {
-    return this.page.url();
-  }
-
-  /**
-   * Get the page header title text
-   * @returns Title text from the page header
-   */
-  async getPageHeaderTitle(): Promise<string> {
-    const titleElement = this.page.locator('.title');
-    await titleElement.waitFor({ state: 'visible' });
-    return await titleElement.innerText();
-  }
-
-  /**
-   * Get the error message text displayed on login failure
-   * @returns The error message text, or null if not visible
-   */
-  async getErrorMessage(): Promise<string> {
-    return await this.errorMessageContainer.innerText();
-  }
-
-  /**
    * Check if error message is displayed
    * @returns true if error message is visible, false otherwise
    */
   async isErrorMessageDisplayed(): Promise<boolean> {
     return await this.errorMessageContainer.isVisible();
-  }
-
-  /**
-   * Check if login button is enabled
-   * @returns true if enabled, false if disabled
-   */
-  async isLoginButtonEnabled(): Promise<boolean> {
-    return await this.loginButton.isEnabled();
-  }
-
-  /**
-   * Clear all input fields
-   */
-  async clearInputFields(): Promise<void> {
-    await this.usernameInput.clear();
-    await this.passwordInput.clear();
-  }
-
-  /**
-   * Get the page title
-   * @returns Page title text
-   */
-  async getPageTitle(): Promise<string> {
-    return await this.page.title();
   }
 }

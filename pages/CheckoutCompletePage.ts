@@ -12,7 +12,6 @@ export class CheckoutCompletePage {
     readonly completeHeader: Locator;
     readonly completeText: Locator;
     readonly ponyExpressImage: Locator;
-    readonly backHomeButton: Locator;
 
     /**
      * Constructor to initialize the Checkout Complete Page
@@ -26,95 +25,6 @@ export class CheckoutCompletePage {
         this.completeHeader = page.getByRole('heading', { name: 'Thank you for your order!' });
         this.completeText = page.getByText('Your order has been dispatched', { exact: false });
         this.ponyExpressImage = page.getByAltText('Pony Express');
-        this.backHomeButton = page.getByRole('button', { name: 'Back Home' });
     }
 
-    /**
-     * Navigate directly to the checkout complete page
-     */
-    async open(): Promise<void> {
-        await this.page.goto('https://www.saucedemo.com/checkout-complete.html');
-    }
-
-    /**
-     * Get the page title text
-     * @returns Page title (should be "Checkout: Complete!")
-     */
-    async getPageTitle(): Promise<string> {
-        return await this.pageTitle.innerText();
-    }
-
-    /**
-     * Get the completion header text
-     * @returns Header text (e.g., "Thank you for your order!")
-     */
-    async getCompleteHeader(): Promise<string> {
-        return await this.completeHeader.innerText();
-    }
-
-    /**
-     * Get the completion message text
-     * @returns Message text (e.g., "Your order has been dispatched...")
-     */
-    async getCompleteText(): Promise<string> {
-        return await this.completeText.innerText();
-    }
-
-    /**
-     * Check if the pony express image is displayed
-     * @returns true if image is visible, false otherwise
-     */
-    async isPonyExpressImageVisible(): Promise<boolean> {
-        return await this.ponyExpressImage.isVisible();
-    }
-
-    /**
-     * Click the Back Home button to return to inventory
-     */
-    async clickBackHome(): Promise<void> {
-        await this.backHomeButton.click();
-    }
-
-    /**
-     * Navigate back to inventory page
-     */
-    async goBackToInventory(): Promise<void> {
-        await this.clickBackHome();
-    }
-
-    /**
-     * Check if back home button is enabled
-     * @returns true if enabled, false otherwise
-     */
-    async isBackHomeButtonEnabled(): Promise<boolean> {
-        return await this.backHomeButton.isEnabled();
-    }
-
-    /**
-     * Get current page URL
-     * @returns Current URL
-     */
-    async getCurrentURL(): Promise<string> {
-        return this.page.url();
-    }
-
-    /**
-     * Verify checkout completion success elements are present
-     * @returns true if all success elements are visible
-     */
-    async isCheckoutSuccessful(): Promise<boolean> {
-        const headerVisible = await this.completeHeader.isVisible();
-        const textVisible = await this.completeText.isVisible();
-        const imageVisible = await this.ponyExpressImage.isVisible();
-        const buttonVisible = await this.backHomeButton.isVisible();
-
-        return headerVisible && textVisible && imageVisible && buttonVisible;
-    }
-
-    /**
-     * Wait for navigation to inventory page after clicking back home
-     */
-    async waitForInventoryPage(): Promise<void> {
-        await this.page.waitForURL(/.*inventory.html/, { timeout: 10000 });
-    }
 }

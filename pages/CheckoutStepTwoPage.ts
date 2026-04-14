@@ -19,7 +19,6 @@ export class CheckoutStepTwoPage {
     readonly taxLabel: Locator;
     readonly totalLabel: Locator;
     readonly finishButton: Locator;
-    readonly cancelButton: Locator;
 
     /**
      * Constructor to initialize the Checkout Step Two Page
@@ -40,22 +39,6 @@ export class CheckoutStepTwoPage {
         this.taxLabel = page.locator('.summary_tax_label');
         this.totalLabel = page.locator('.summary_total_label');
         this.finishButton = page.getByRole('button', { name: 'Finish' });
-        this.cancelButton = page.getByRole('button', { name: 'Cancel' });
-    }
-
-    /**
-     * Navigate directly to the checkout step two page
-     */
-    async open(): Promise<void> {
-        await this.page.goto('https://www.saucedemo.com/checkout-step-two.html');
-    }
-
-    /**
-     * Get the page title text
-     * @returns Page title (should be "Checkout: Overview")
-     */
-    async getPageTitle(): Promise<string> {
-        return await this.pageTitle.innerText();
     }
 
     /**
@@ -72,30 +55,6 @@ export class CheckoutStepTwoPage {
      */
     async getAllItemNames(): Promise<string[]> {
         return await this.cartItemNames.allInnerTexts();
-    }
-
-    /**
-     * Get all item prices in the order
-     * @returns Array of item prices
-     */
-    async getAllItemPrices(): Promise<string[]> {
-        return await this.cartItemPrices.allInnerTexts();
-    }
-
-    /**
-     * Get payment information text
-     * @returns Payment info (e.g., "SauceCard #31337")
-     */
-    async getPaymentInformation(): Promise<string> {
-        return await this.paymentInformation.innerText();
-    }
-
-    /**
-     * Get shipping information text
-     * @returns Shipping info (e.g., "Free Pony Express Delivery!")
-     */
-    async getShippingInformation(): Promise<string> {
-        return await this.shippingInformation.innerText();
     }
 
     /**
@@ -160,60 +119,6 @@ export class CheckoutStepTwoPage {
      */
     async clickFinish(): Promise<void> {
         await this.finishButton.click();
-    }
-
-    /**
-     * Click the Cancel button
-     */
-    async clickCancel(): Promise<void> {
-        await this.cancelButton.click();
-    }
-
-    /**
-     * Complete the checkout process
-     */
-    async completeCheckout(): Promise<void> {
-        await this.clickFinish();
-    }
-
-    /**
-     * Check if finish button is enabled
-     * @returns true if enabled, false otherwise
-     */
-    async isFinishButtonEnabled(): Promise<boolean> {
-        return await this.finishButton.isEnabled();
-    }
-
-    /**
-     * Get current page URL
-     * @returns Current URL
-     */
-    async getCurrentURL(): Promise<string> {
-        return this.page.url();
-    }
-
-    /**
-     * Wait for navigation to checkout complete page
-     */
-    async waitForCheckoutComplete(): Promise<void> {
-        await this.page.waitForURL(/.*checkout-complete.html/, { timeout: 10000 });
-    }
-
-    /**
-     * Get all order items as an array of objects
-     * @returns Array of items with name and price
-     */
-    async getAllOrderItems(): Promise<Array<{ name: string; price: string }>> {
-        const itemCount = await this.getItemCount();
-        const items: Array<{ name: string; price: string }> = [];
-
-        for (let i = 0; i < itemCount; i++) {
-            const name = await this.cartItemNames.nth(i).innerText();
-            const price = await this.cartItemPrices.nth(i).innerText();
-            items.push({ name, price });
-        }
-
-        return items;
     }
 
     /**

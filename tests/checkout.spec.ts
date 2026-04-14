@@ -81,8 +81,8 @@ test.describe('E2E Checkout Flow - 3 Random Items (Using PageManager)', () => {
         // PageManager already initialized in beforeEach
 
         // Step 1: Verify we're on inventory page
-        expect(await pm.inventoryPage.getCurrentURL()).toContain('inventory.html');
-        expect(await pm.inventoryPage.getPageTitle()).toBe('Products');
+        await expect(page).toHaveURL(/inventory\.html/);
+        await expect(pm.inventoryPage.pageTitle).toHaveText('Products');
 
         // Step 2: Select 3 random products
         const selectedProducts = await pm.inventoryPage.addRandomProductsToCart(itemCountToSelect);
@@ -93,14 +93,14 @@ test.describe('E2E Checkout Flow - 3 Random Items (Using PageManager)', () => {
 
         // Step 3: Verify cart badge shows 3 items
         expect(await pm.inventoryPage.getCartCount()).toBe(itemCountToSelect);
-        expect(await pm.inventoryPage.isCartBadgeVisible()).toBeTruthy();
+        await expect(pm.inventoryPage.shoppingCartBadge).toBeVisible();
 
         // Step 4: Navigate to cart
         await pm.inventoryPage.goToCart();
 
         // Step 5: Verify all 3 items are in cart
-        expect(await pm.cartPage.getCurrentURL()).toContain('cart.html');
-        expect(await pm.cartPage.getPageTitle()).toBe('Your Cart');
+        await expect(page).toHaveURL(/cart\.html/);
+        await expect(pm.cartPage.pageTitle).toHaveText('Your Cart');
         expect(await pm.cartPage.getCartItemCount()).toBe(itemCountToSelect);
 
         // Verify each selected product is in the cart
@@ -113,8 +113,8 @@ test.describe('E2E Checkout Flow - 3 Random Items (Using PageManager)', () => {
         await pm.checkoutStepOnePage.waitForPageLoad();
 
         // Step 7: Fill in customer information
-        expect(await pm.checkoutStepOnePage.getCurrentURL()).toContain('checkout-step-one.html');
-        expect(await pm.checkoutStepOnePage.getPageTitle()).toBe('Checkout: Your Information');
+        await expect(page).toHaveURL(/checkout-step-one\.html/);
+        await expect(pm.checkoutStepOnePage.pageTitle).toHaveText('Checkout: Your Information');
 
         await pm.checkoutStepOnePage.fillCheckoutInformation(CHECKOUT_INFO.VALID);
 
@@ -122,18 +122,16 @@ test.describe('E2E Checkout Flow - 3 Random Items (Using PageManager)', () => {
         await pm.checkoutStepOnePage.clickContinue();
 
         // Step 9: Verify order summary
-        expect(await pm.checkoutStepTwoPage.getCurrentURL()).toContain('checkout-step-two.html');
-        expect(await pm.checkoutStepTwoPage.getPageTitle()).toBe('Checkout: Overview');
+        await expect(page).toHaveURL(/checkout-step-two\.html/);
+        await expect(pm.checkoutStepTwoPage.pageTitle).toHaveText('Checkout: Overview');
 
         // Verify all items are in the order
         expect(await pm.checkoutStepTwoPage.getItemCount()).toBe(3);
         expect(await pm.checkoutStepTwoPage.areItemsInOrder(selectedProductNames)).toBeTruthy();
 
         // Verify payment and shipping information
-        const paymentInfo = await pm.checkoutStepTwoPage.getPaymentInformation();
-        const shippingInfo = await pm.checkoutStepTwoPage.getShippingInformation();
-        expect(paymentInfo).toBeTruthy();
-        expect(shippingInfo).toBeTruthy();
+        await expect(pm.checkoutStepTwoPage.paymentInformation).not.toBeEmpty();
+        await expect(pm.checkoutStepTwoPage.shippingInformation).not.toBeEmpty();
 
 
         // Verify price calculation
@@ -150,14 +148,11 @@ test.describe('E2E Checkout Flow - 3 Random Items (Using PageManager)', () => {
         await pm.checkoutStepTwoPage.clickFinish();
 
         // Step 11: Verify order confirmation
-        expect(await pm.checkoutCompletePage.getCurrentURL()).toContain('checkout-complete.html');
-        expect(await pm.checkoutCompletePage.getPageTitle()).toBe('Checkout: Complete!');
-
-        const confirmationHeader = await pm.checkoutCompletePage.getCompleteHeader();
-        expect(confirmationHeader).toContain('Thank you for your order');
-
-        expect(await pm.checkoutCompletePage.isPonyExpressImageVisible()).toBeTruthy();
-        expect(await pm.checkoutCompletePage.isCheckoutSuccessful()).toBeTruthy();
+        await expect(page).toHaveURL(/checkout-complete\.html/);
+        await expect(pm.checkoutCompletePage.pageTitle).toHaveText('Checkout: Complete!');
+        await expect(pm.checkoutCompletePage.completeHeader).toContainText('Thank you for your order');
+        await expect(pm.checkoutCompletePage.ponyExpressImage).toBeVisible();
+        await expect(pm.checkoutCompletePage.completeText).toBeVisible();
 
     });
 
@@ -310,8 +305,8 @@ test.describe('E2E Checkout Flow - 3 Random Items (Using PageManager)', () => {
         await pm.checkoutStepTwoPage.clickFinish();
 
         // Verify completion
-        expect(await pm.checkoutCompletePage.getCurrentURL()).toContain('checkout-complete.html');
-        expect(await pm.checkoutCompletePage.isCheckoutSuccessful()).toBeTruthy();
+        await expect(page).toHaveURL(/checkout-complete\.html/);
+        await expect(pm.checkoutCompletePage.completeHeader).toBeVisible();
 
     });
 });

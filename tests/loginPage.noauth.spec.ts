@@ -19,8 +19,8 @@ test.describe('Login Page - Positive Scenarios', () => {
     test('should successfully login with valid standard_user credentials', async ({ page }) => {
         await loginPage.login(TEST_USERS.STANDARD.username, TEST_USERS.STANDARD.password);
         await loginPage.waitForInventoryPage();
-        expect(await loginPage.getCurrentURL()).toContain('inventory.html');
-        expect(await loginPage.getPageHeaderTitle()).toBe('Products');
+        await expect(page).toHaveURL(/inventory.html/);
+        await expect(loginPage.headerTitle).toHaveText('Products');
     });
 
     /**
@@ -119,16 +119,12 @@ test.describe('Login Page - Negative Scenarios', () => {
         await loginPage.login('invalid_user', 'secret_sauce');
 
         // Expected Results: Verify error handling
-        const isErrorDisplayed = await loginPage.isErrorMessageDisplayed();
-        expect(isErrorDisplayed).toBeTruthy();
-
-        const errorMessage = await loginPage.getErrorMessage();
-        expect(errorMessage).toContain('Username and password do not match');
+        await expect(loginPage.errorMessageContainer).toBeVisible();
+        await expect(loginPage.errorMessageContainer).toContainText('Username and password do not match');
 
         // Verify user stays on login page
-        expect(page.url()).toContain('saucedemo.com');
-        expect(loginPage.getCurrentURL()).not.toContain('inventory.html');
-        expect(loginPage.pageTitle).toBe('Swag Labs');
+        await expect(page).toHaveURL(/saucedemo\.com/);
+        await expect(page).not.toHaveURL(/inventory\.html/);
     });
 
 
@@ -159,10 +155,8 @@ test.describe('Login Page - Negative Scenarios', () => {
         await loginPage.login('standard_user', 'wrong_password');
 
         // Expected Results: Verify error handling
-        expect(await loginPage.isErrorMessageDisplayed()).toBeTruthy();
-
-        const errorMessage = await loginPage.getErrorMessage();
-        expect(errorMessage).toContain('Username and password do not match');
+        await expect(loginPage.errorMessageContainer).toBeVisible();
+        await expect(loginPage.errorMessageContainer).toContainText('Username and password do not match');
     });
 
     /**
@@ -193,10 +187,8 @@ test.describe('Login Page - Negative Scenarios', () => {
         await loginPage.clickLoginButton();
 
         // Expected Results: Verify validation error
-        expect(await loginPage.isErrorMessageDisplayed()).toBeTruthy();
-
-        const errorMessage = await loginPage.getErrorMessage();
-        expect(errorMessage).toContain('Username is required');
+        await expect(loginPage.errorMessageContainer).toBeVisible();
+        await expect(loginPage.errorMessageContainer).toContainText('Username is required');
     });
 
     /**
@@ -227,13 +219,11 @@ test.describe('Login Page - Negative Scenarios', () => {
         await loginPage.clickLoginButton();
 
         // Expected Results: Verify validation error
-        expect(await loginPage.isErrorMessageDisplayed()).toBeTruthy();
-
-        const errorMessage = await loginPage.getErrorMessage();
-        expect(errorMessage).toContain('Password is required');
+        await expect(loginPage.errorMessageContainer).toBeVisible();
+        await expect(loginPage.errorMessageContainer).toContainText('Password is required');
 
         // Verify user stays on login page
-        expect(page.url()).not.toContain('inventory.html');
+        await expect(page).not.toHaveURL(/inventory\.html/);
     });
 
     /**
@@ -262,14 +252,13 @@ test.describe('Login Page - Negative Scenarios', () => {
         await loginPage.login('invalid_user', 'invalid_pass');
 
         // Step 2: Verify error is displayed
-        expect(await loginPage.isErrorMessageDisplayed()).toBeTruthy();
+        await expect(loginPage.errorMessageContainer).toBeVisible();
 
         // Step 3: Click close button
-        const closeButton = page.locator('[data-test="error-button"]');
-        await closeButton.click();
+        await page.locator('[data-test="error-button"]').click();
 
         // Expected Results: Error should be hidden
-        expect(await loginPage.isErrorMessageDisplayed()).toBeFalsy();
+        await expect(loginPage.errorMessageContainer).not.toBeVisible();
     });
 
     /**
@@ -301,11 +290,11 @@ test.describe('Login Page - Negative Scenarios', () => {
 
         if (isErrorDisplayed) {
             // If spaces are not trimmed, login should fail
-            expect(page.url()).not.toContain('inventory.html');
+            await expect(page).not.toHaveURL(/inventory\.html/);
         } else {
             // If spaces are trimmed, login might succeed
             // Document this behavior for the team
-            expect(page.url()).toContain('inventory.html');
+            await expect(page).toHaveURL(/inventory\.html/);
         }
     });
 });

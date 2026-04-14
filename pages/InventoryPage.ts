@@ -42,14 +42,6 @@ export class InventoryPage {
     }
 
     /**
-     * Get the page title text
-     * @returns Page title (should be "Products")
-     */
-    async getPageTitle(): Promise<string> {
-        return await this.pageTitle.innerText();
-    }
-
-    /**
      * Get the total number of products displayed
      * @returns Number of products
      */
@@ -139,25 +131,10 @@ export class InventoryPage {
     }
 
     /**
-     * Check if cart badge is visible
-     * @returns true if badge is visible, false otherwise
-     */
-    async isCartBadgeVisible(): Promise<boolean> {
-        return await this.shoppingCartBadge.isVisible();
-    }
-
-    /**
      * Click on the shopping cart to go to cart page
      */
     async goToCart(): Promise<void> {
         await this.shoppingCartLink.click();
     }
 
-    /**
-     * Get current page URL
-     * @returns Current URL
-     */
-    async getCurrentURL(): Promise<string> {
-        return this.page.url();
-    }
 }

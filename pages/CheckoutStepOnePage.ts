@@ -38,14 +38,6 @@ export class CheckoutStepOnePage {
     }
 
     /**
-     * Get the page title text
-     * @returns Page title (should be "Checkout: Your Information")
-     */
-    async getPageTitle(): Promise<string> {
-        return await this.pageTitle.innerText();
-    }
-
-    /**
      * Fill in all checkout information fields
      * @param info - Object containing firstName, lastName, and postalCode
      */
@@ -71,11 +63,4 @@ export class CheckoutStepOnePage {
         await this.clickContinue();
     }
 
-    /**
-     * Get current page URL
-     * @returns Current URL
-     */
-    async getCurrentURL(): Promise<string> {
-        return this.page.url();
-    }
 }

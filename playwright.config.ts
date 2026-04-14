@@ -35,38 +35,27 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    // Setup project - runs authentication before tests
-    {
-      name: 'setup',
-      testMatch: /auth\.setup\.ts/,
-    },
+    // Per-browser setup projects - each browser authenticates independently
+    { name: 'setup-chromium', testMatch: /auth\.setup\.ts/, use: { ...devices['Desktop Chrome'] } },
+    { name: 'setup-firefox',  testMatch: /auth\.setup\.ts/, use: { ...devices['Desktop Firefox'] } },
+    { name: 'setup-webkit',   testMatch: /auth\.setup\.ts/, use: { ...devices['Desktop Safari'] } },
+
     {
       name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-        storageState: 'playwright/.auth/user.json',
-      },
-      dependencies: ['setup'],
+      use: { ...devices['Desktop Chrome'], storageState: 'playwright/.auth/chromium.json' },
+      dependencies: ['setup-chromium'],
       testIgnore: /.*noauth.spec.ts/,
     },
-
     {
       name: 'firefox',
-      use: {
-        ...devices['Desktop Firefox'],
-        storageState: 'playwright/.auth/user.json',
-      },
-      dependencies: ['setup'],
+      use: { ...devices['Desktop Firefox'], storageState: 'playwright/.auth/firefox.json' },
+      dependencies: ['setup-firefox'],
       testIgnore: /.*noauth.spec.ts/,
     },
-
     {
       name: 'webkit',
-      use: {
-        ...devices['Desktop Safari'],
-        storageState: 'playwright/.auth/user.json',
-      },
-      dependencies: ['setup'],
+      use: { ...devices['Desktop Safari'], storageState: 'playwright/.auth/webkit.json' },
+      dependencies: ['setup-webkit'],
       testIgnore: /.*noauth.spec.ts/,
     },
 

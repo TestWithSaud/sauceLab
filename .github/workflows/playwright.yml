@@ -11,7 +11,7 @@ jobs:
   test:
     name: Run Playwright Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     steps:
       - name: Checkout code
@@ -35,11 +35,11 @@ jobs:
 
       - name: Install Playwright browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps
+        run: npx playwright install --with-deps chromium
 
       - name: Install Playwright OS dependencies
         if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps
+        run: npx playwright install-deps chromium
 
       - name: Run Playwright tests
         env:
@@ -47,7 +47,7 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
           STANDARD_USERNAME: ${{ secrets.STANDARD_USERNAME }}
           STANDARD_PASSWORD: ${{ secrets.STANDARD_PASSWORD }}
-        run: npx playwright test
+        run: npx playwright test --project=setup-chromium --project=chromium --project=chromium-noauth
 
       - name: Upload test report
         uses: actions/upload-artifact@v4

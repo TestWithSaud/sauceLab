@@ -5,6 +5,8 @@ import { CartPage } from '../pages/CartPage';
 import { CheckoutStepOnePage } from '../pages/CheckoutStepOnePage';
 import { CheckoutStepTwoPage } from '../pages/CheckoutStepTwoPage';
 import { CheckoutCompletePage } from '../pages/CheckoutCompletePage';
+import { ProductDetailPage } from '../pages/ProductDetailPage';
+import { HamburgerMenuPage } from '../pages/HamburgerMenuPage';
 
 /**
  * PageManager - Centralized Page Object Management
@@ -31,6 +33,8 @@ export class PageManager {
     readonly checkoutStepOnePage: CheckoutStepOnePage;
     readonly checkoutStepTwoPage: CheckoutStepTwoPage;
     readonly checkoutCompletePage: CheckoutCompletePage;
+    readonly productDetailPage: ProductDetailPage;
+    readonly hamburgerMenuPage: HamburgerMenuPage;
 
     /**
      * Constructor - Instantiates all page objects
@@ -46,5 +50,7 @@ export class PageManager {
         this.checkoutStepOnePage = new CheckoutStepOnePage(this.page);
         this.checkoutStepTwoPage = new CheckoutStepTwoPage(this.page);
         this.checkoutCompletePage = new CheckoutCompletePage(this.page);
+        this.productDetailPage = new ProductDetailPage(this.page);
+        this.hamburgerMenuPage = new HamburgerMenuPage(this.page);
     }
 }

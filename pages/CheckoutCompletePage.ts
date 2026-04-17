@@ -12,6 +12,7 @@ export class CheckoutCompletePage {
     readonly completeHeader: Locator;
     readonly completeText: Locator;
     readonly ponyExpressImage: Locator;
+    readonly backHomeButton: Locator;
 
     /**
      * Constructor to initialize the Checkout Complete Page
@@ -25,6 +26,7 @@ export class CheckoutCompletePage {
         this.completeHeader = page.getByRole('heading', { name: 'Thank you for your order!' });
         this.completeText = page.getByText('Your order has been dispatched', { exact: false });
         this.ponyExpressImage = page.getByAltText('Pony Express');
+        this.backHomeButton = page.getByRole('button', { name: 'Back Home' });
     }
 
 }

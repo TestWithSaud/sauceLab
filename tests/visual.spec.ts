@@ -52,4 +52,18 @@ test.describe('Visual Regression', () => {
         await expect(page).toHaveScreenshot('checkout-complete.png', { fullPage: true });
     });
 
+    test('product detail page', { tag: ['@visual'] }, async ({ page }) => {
+        const pm = new PageManager(page);
+        await pm.inventoryPage.open();
+        await pm.inventoryPage.productNames.first().click();
+        await expect(page).toHaveScreenshot('product-detail.png', { fullPage: true });
+    });
+
+    test('empty cart page', { tag: ['@visual'] }, async ({ page }) => {
+        const pm = new PageManager(page);
+        await pm.inventoryPage.open();
+        await pm.inventoryPage.goToCart();
+        await expect(page).toHaveScreenshot('empty-cart.png', { fullPage: true });
+    });
+
 });

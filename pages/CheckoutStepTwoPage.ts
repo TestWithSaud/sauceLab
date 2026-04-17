@@ -19,6 +19,7 @@ export class CheckoutStepTwoPage {
     readonly taxLabel: Locator;
     readonly totalLabel: Locator;
     readonly finishButton: Locator;
+    readonly cancelButton: Locator;
 
     /**
      * Constructor to initialize the Checkout Step Two Page
@@ -35,10 +36,11 @@ export class CheckoutStepTwoPage {
         this.cartItemQuantities = page.locator('.cart_quantity');
         this.paymentInformation = page.locator('[data-test="payment-info-value"]');
         this.shippingInformation = page.locator('[data-test="shipping-info-value"]');
-        this.subtotalLabel = page.locator('.summary_subtotal_label');
-        this.taxLabel = page.locator('.summary_tax_label');
-        this.totalLabel = page.locator('.summary_total_label');
+        this.subtotalLabel = page.getByText(/Item total:/);
+        this.taxLabel = page.getByText(/^Tax:/);
+        this.totalLabel = page.getByText(/^Total:/);
         this.finishButton = page.getByRole('button', { name: 'Finish' });
+        this.cancelButton = page.getByRole('button', { name: 'Cancel' });
     }
 
     /**
@@ -119,6 +121,10 @@ export class CheckoutStepTwoPage {
      */
     async clickFinish(): Promise<void> {
         await this.finishButton.click();
+    }
+
+    async clickCancel(): Promise<void> {
+        await this.cancelButton.click();
     }
 
     /**

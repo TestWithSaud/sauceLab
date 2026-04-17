@@ -13,6 +13,7 @@ export class CheckoutStepOnePage {
     readonly lastNameInput: Locator;
     readonly postalCodeInput: Locator;
     readonly continueButton: Locator;
+    readonly cancelButton: Locator;
     readonly errorMessageContainer: Locator;
 
     /**
@@ -28,6 +29,7 @@ export class CheckoutStepOnePage {
         this.lastNameInput = page.getByPlaceholder('Last Name');
         this.postalCodeInput = page.getByPlaceholder('Zip/Postal Code');
         this.continueButton = page.getByRole('button', { name: 'Continue' });
+        this.cancelButton = page.getByRole('button', { name: 'Cancel' });
         this.errorMessageContainer = page.locator('[data-test="error"]');
     }
 
@@ -60,6 +62,10 @@ export class CheckoutStepOnePage {
      * Complete checkout step one with provided information
      * @param info - Object containing firstName, lastName, and postalCode
      */
+    async clickCancel(): Promise<void> {
+        await this.cancelButton.click();
+    }
+
     async completeCheckoutStepOne(info: { firstName: string; lastName: string; postalCode: string }): Promise<void> {
         await this.fillCheckoutInformation(info);
         await this.clickContinue();

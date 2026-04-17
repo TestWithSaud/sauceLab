@@ -74,14 +74,23 @@ export class InventoryPage {
      * Add a product to cart by index
      * @param index - Product index (0-based)
      */
-    async addProductToCartByIndex(index: number): Promise<void> {
-        // Get product name first to build correct data-test selector
-        const productName = await this.productNames.nth(index).innerText();
-        const productNameKebabCase = productName.toLowerCase().replace(/\s+/g, '-');
+    private toKebabCase(name: string): string {
+        return name.toLowerCase().replace(/\s+/g, '-');
+    }
 
-        // Use the specific data-test attribute for this product
-        const addButton = this.page.locator(`[data-test="add-to-cart-${productNameKebabCase}"]`);
-        await addButton.click();
+    async addProductToCartByIndex(index: number): Promise<void> {
+        const productName = await this.productNames.nth(index).innerText();
+        const kebab = this.toKebabCase(productName);
+        await this.page.locator(`[data-test="add-to-cart-${kebab}"]`).click();
+    }
+
+    async getProductButtonLocators(index: number): Promise<{ add: import('@playwright/test').Locator; remove: import('@playwright/test').Locator }> {
+        const productName = await this.productNames.nth(index).innerText();
+        const kebab = this.toKebabCase(productName);
+        return {
+            add: this.page.locator(`[data-test="add-to-cart-${kebab}"]`),
+            remove: this.page.locator(`[data-test="remove-${kebab}"]`),
+        };
     }
 
     /**

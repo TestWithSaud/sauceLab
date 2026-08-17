@@ -36,9 +36,9 @@ export class CheckoutStepTwoPage {
         this.cartItemQuantities = page.locator('.cart_quantity');
         this.paymentInformation = page.locator('[data-test="payment-info-value"]');
         this.shippingInformation = page.locator('[data-test="shipping-info-value"]');
-        this.subtotalLabel = page.getByText(/Item total:/);
-        this.taxLabel = page.getByText(/^Tax:/);
-        this.totalLabel = page.getByText(/^Total:/);
+        this.subtotalLabel = page.locator('[data-test="subtotal-label"]');
+        this.taxLabel = page.locator('[data-test="tax-label"]');
+        this.totalLabel = page.locator('[data-test="total-label"]');
         this.finishButton = page.getByRole('button', { name: 'Finish' });
         this.cancelButton = page.getByRole('button', { name: 'Cancel' });
     }

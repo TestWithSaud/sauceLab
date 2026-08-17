@@ -14,19 +14,18 @@ export class LoginPage {
   readonly errorMessageContainer: Locator;
   readonly logoImage: Locator;
   readonly headerTitle: Locator;
-  readonly pageTitle: string;
 
   constructor(page: Page) {
     this.page = page;
 
-    // Initialize locators using data-test attributes (most stable)
+    // Prefer user-facing locators (role/placeholder); data-test only where
+    // the element has no accessible name.
     this.usernameInput = page.getByPlaceholder('Username');
     this.passwordInput = page.getByPlaceholder('Password');
     this.loginButton = page.getByRole('button', { name: 'Login' });
     this.errorMessageContainer = page.locator('[data-test="error"]');
     this.logoImage = page.getByText('Swag Labs');
     this.headerTitle = page.locator('.title');
-    this.pageTitle = 'Swag Labs';
   }
   async open(): Promise<void> {
     await this.page.goto('/');

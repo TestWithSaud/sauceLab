@@ -71,9 +71,8 @@ test.describe('Login Page - Positive Scenarios', () => {
      * Expected Results:
      * - Page title is "Swag Labs"
      */
-    test('should have correct page title', { tag: ['@login', '@regression'] }, async () => {
-        const title = await loginPage.pageTitle;
-        expect(title).toBe('Swag Labs');
+    test('should have correct page title', { tag: ['@login', '@regression'] }, async ({ page }) => {
+        await expect(page).toHaveTitle('Swag Labs');
     });
 });
 

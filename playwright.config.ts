@@ -53,17 +53,18 @@ export default defineConfig({
       dependencies: ['setup-chromium'],
       testIgnore: /.*noauth.spec.ts/,
     },
+    // Visual baselines are maintained for chromium only - see visual.spec.ts.
     {
       name: 'firefox',
       use: { ...devices['Desktop Firefox'], storageState: 'playwright/.auth/firefox.json' },
       dependencies: ['setup-firefox'],
-      testIgnore: /.*noauth.spec.ts/,
+      testIgnore: [/.*noauth.spec.ts/, /visual\.spec\.ts/],
     },
     {
       name: 'webkit',
       use: { ...devices['Desktop Safari'], storageState: 'playwright/.auth/webkit.json' },
       dependencies: ['setup-webkit'],
-      testIgnore: /.*noauth.spec.ts/,
+      testIgnore: [/.*noauth.spec.ts/, /visual\.spec\.ts/],
     },
 
      // Chromium - No Auth

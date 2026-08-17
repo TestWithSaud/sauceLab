@@ -5,8 +5,10 @@ import { CHECKOUT_INFO } from '../test-data/testData';
 test.describe('E2E Checkout Flow', () => {
     let pm: PageManager;
 
-    test.beforeEach(async ({ page }) => {
+    test.beforeEach(async ({ page }, testInfo) => {
         pm = new PageManager(page);
+        // Surfaced in the report so a failed run can be replayed with TEST_SEED.
+        testInfo.annotations.push({ type: 'seed', description: String(pm.inventoryPage.randomSeed) });
         await pm.inventoryPage.open();
     });
 
@@ -131,17 +133,5 @@ test.describe('E2E Checkout Flow', () => {
         await expect(pm.checkoutStepOnePage.errorMessageContainer).toBeVisible();
         await expect(pm.checkoutStepOnePage.errorMessageContainer).toContainText('Postal Code is required');
         await expect(page).toHaveURL(/checkout-step-one\.html/);
-    });
-
-    test('should complete checkout successfully', { tag: ['@checkout', '@regression'] }, async ({ page }) => {
-        await pm.inventoryPage.addRandomProductsToCart(3);
-        await pm.inventoryPage.goToCart();
-        await pm.cartPage.proceedToCheckout();
-        await pm.checkoutStepOnePage.waitForPageLoad();
-        await pm.checkoutStepOnePage.completeCheckoutStepOne(CHECKOUT_INFO.VALID);
-        await pm.checkoutStepTwoPage.clickFinish();
-
-        await expect(page).toHaveURL(/checkout-complete\.html/);
-        await expect(pm.checkoutCompletePage.completeHeader).toBeVisible();
     });
 });

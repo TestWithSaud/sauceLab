@@ -16,12 +16,24 @@ export class InventoryPage {
     readonly shoppingCartBadge: Locator;
     readonly shoppingCartLink: Locator;
     readonly sortDropdown: Locator;
+
+    /**
+     * Seed backing every random product selection on this instance.
+     * Set TEST_SEED to replay a previous run's exact selection.
+     */
+    readonly randomSeed: number;
+    private rngState: number;
+
     /**
      * Constructor to initialize the Inventory Page
      * @param page - Playwright Page object
      */
     constructor(page: Page) {
         this.page = page;
+
+        const envSeed = process.env.TEST_SEED;
+        this.randomSeed = envSeed ? Number(envSeed) : Math.floor(Math.random() * 0xffffffff);
+        this.rngState = this.randomSeed;
 
         // Initialize locators
         this.pageTitle = page.locator('.title');
@@ -120,6 +132,19 @@ export class InventoryPage {
     }
 
     /**
+     * Deterministic PRNG (mulberry32) driven by randomSeed, so a failing run
+     * can be replayed exactly via TEST_SEED.
+     * @returns Float in [0, 1)
+     */
+    private nextRandom(): number {
+        this.rngState = (this.rngState + 0x6d2b79f5) >>> 0;
+        let t = this.rngState;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    }
+
+    /**
      * Generate random unique indices
      * @param max - Maximum value (exclusive)
      * @param count - Number of unique indices needed
@@ -128,7 +153,7 @@ export class InventoryPage {
     private generateRandomUniqueIndices(max: number, count: number): number[] {
         const indices: number[] = [];
         while (indices.length < count) {
-            const randomIndex = Math.floor(Math.random() * max);
+            const randomIndex = Math.floor(this.nextRandom() * max);
             if (!indices.includes(randomIndex)) {
                 indices.push(randomIndex);
             }

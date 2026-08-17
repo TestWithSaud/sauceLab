@@ -12,9 +12,10 @@ A Playwright test automation project for the [Sauce Demo](https://www.saucedemo.
 ## Features
 
 - Page Object Model with a centralized `PageManager`
-- Semantic locators (`getByRole`, `getByPlaceholder`, `getByText`, `getByAltText`)
+- User-facing locators (`getByRole`, `getByPlaceholder`), falling back to `data-test` where an element has no accessible name
 - Per-browser authentication — each browser authenticates independently and stores its own session
 - Visual regression testing with OS-aware screenshot baselines (Linux for CI, macOS for local)
+- Reproducible randomized test data — seeded selection replayable via `TEST_SEED`
 - Test tagging for selective test execution (`@smoke`, `@login`, `@checkout`, `@regression`, `@visual`)
 - Cross-browser support: Chromium, Firefox, WebKit
 - CI-optimized: 2 workers, chromium-only on GitHub Actions, browser caching
@@ -29,12 +30,16 @@ A Playwright test automation project for the [Sauce Demo](https://www.saucedemo.
 │   ├── CartPage.ts
 │   ├── CheckoutStepOnePage.ts
 │   ├── CheckoutStepTwoPage.ts
-│   └── CheckoutCompletePage.ts
+│   ├── CheckoutCompletePage.ts
+│   ├── ProductDetailPage.ts
+│   └── HamburgerMenuPage.ts
 ├── tests/
 │   ├── auth.setup.ts         # Authentication setup (runs before authenticated tests)
-│   ├── loginPage.noauth.spec.ts   # Login page tests (no auth required)
-│   ├── checkout.spec.ts      # End-to-end checkout flow tests
-│   └── visual.spec.ts        # Visual regression tests
+│   ├── *.noauth.spec.ts      # Tests that run logged out (login, unauth access, other users)
+│   ├── checkout*.spec.ts     # Checkout flow, cancellation, completion
+│   ├── cart*.spec.ts         # Cart contents, quantities, edge cases
+│   ├── inventory*.spec.ts    # Product listing, sorting, button interactions
+│   └── visual.spec.ts        # Visual regression (chromium only)
 ├── test-data/
 │   └── testData.ts           # Test users, checkout info, constants
 ├── playwright/.auth/         # Stored browser auth states (gitignored)
@@ -70,7 +75,20 @@ A Playwright test automation project for the [Sauce Demo](https://www.saucedemo.
    STANDARD_PASSWORD=secret_sauce
    ```
 
+   All three are required. If a credential is missing, the suite fails immediately at import naming the variable, rather than surfacing later as an unrelated timeout.
+
 ## Running Tests
+
+### npm scripts (shortcuts for the common cases)
+```bash
+npm test                    # all tests, all browsers
+npm run test:smoke          # @smoke only
+npm run test:regression     # @regression only
+npm run test:chromium       # chromium projects only (matches CI)
+npm run test:visual         # visual regression
+npm run test:visual:update  # regenerate local (macOS) baselines
+npm run report              # open the HTML report
+```
 
 ### All tests (all browsers)
 ```bash
@@ -117,10 +135,19 @@ npx playwright show-report
 
 Screenshot baselines are stored in `tests/visual.spec.ts-snapshots/` with OS-specific filenames (e.g. `inventory-chromium-linux.png`, `inventory-chromium-darwin.png`).
 
-- **Local (macOS):** baselines are generated and compared automatically
-- **CI (Linux):** uses the linux baselines committed via the update-snapshots workflow
+Playwright keys every baseline by **project and operating system**, because font rasterization differs between macOS and Linux — the same page never matches across platforms. Each screenshot therefore needs one baseline per OS:
 
-To regenerate baselines after an intentional UI change, trigger the **Update Visual Snapshots** workflow manually from GitHub Actions. It runs on Linux, updates the snapshots, and commits them back to the repo.
+- **Local (macOS):** compares against the `-darwin` baselines
+- **CI (Linux):** compares against the `-linux` baselines, committed by the update-snapshots workflow
+
+Visual tests run on **chromium only** — the `firefox` and `webkit` projects ignore `visual.spec.ts`. Cross-browser visual baselines would mean six sets per screenshot to maintain, mostly catching engine font differences rather than bugs, and CI installs chromium only. Functional coverage still runs on all three browsers.
+
+After an intentional UI change, both platforms need updating:
+
+1. **macOS:** `npm run test:visual:update`, then commit the changed `-darwin` files
+2. **Linux:** trigger the **Update Visual Snapshots** workflow from GitHub Actions — it runs on Linux, regenerates the `-linux` baselines, and commits them back
+
+Note that this suite screenshots a live third-party site, so upstream changes to saucedemo will legitimately fail these tests until the baselines are refreshed.
 
 ## CI
 
@@ -133,6 +160,18 @@ The main workflow (`.github/workflows/playwright.yml`) runs on every push and pu
 - Uploads screenshot diffs as an artifact on failure (retained 7 days)
 
 Required GitHub secrets: `BASE_URL`, `STANDARD_USERNAME`, `STANDARD_PASSWORD`
+
+## Reproducing a Failed Run
+
+Several checkout tests pick products at random via `InventoryPage.addRandomProductsToCart()`. Selection is driven by a seeded PRNG rather than `Math.random()`, so any run can be replayed exactly.
+
+The seed is attached to each test as an annotation and appears in the HTML report. To replay that run:
+
+```bash
+TEST_SEED=12345 npx playwright test tests/checkout.spec.ts
+```
+
+Leave `TEST_SEED` unset for normal runs — a fresh seed is generated each time, preserving randomized coverage. Do not put it in `.env`, or every run pins to the same products.
 
 ## Authentication
 

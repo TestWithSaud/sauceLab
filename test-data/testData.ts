@@ -1,11 +1,23 @@
+/**
+ * Read a required environment variable, failing loudly at import time rather
+ * than surfacing later as an opaque fill() error.
+ */
+function requireEnv(name: string): string {
+    const value = process.env[name];
+    if (!value) {
+        throw new Error(`Missing required environment variable: ${name}. Set it in .env locally, or as a CI secret.`);
+    }
+    return value;
+}
+
 export const TEST_USERS = {
     STANDARD: {
-        username: process.env.STANDARD_USERNAME,
-        password: process.env.STANDARD_PASSWORD,
+        username: requireEnv('STANDARD_USERNAME'),
+        password: requireEnv('STANDARD_PASSWORD'),
     },
     LOCKED_OUT: {
         username: 'locked_out_user',
-        password: process.env.STANDARD_PASSWORD,
+        password: requireEnv('STANDARD_PASSWORD'),
     },
 } as const;
 
